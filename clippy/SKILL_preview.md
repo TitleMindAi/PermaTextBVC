@@ -4,7 +4,9 @@ description: >
   Bounded Virtual Context (BVC) protocol for infinite session continuity.
   Maintains a hard-capped Canonical State Ledger (CSL) with provenance-linked
   claims across arbitrarily long workflows. Every fact traces to source evidence.
-  Bounded prompt. Unbounded memory. Auditable facts.
+  Now with verifiable provenance chains, oracle validation, multi-agent consensus,
+  self-evolving normalization, and zero-knowledge proofs.
+  Bounded prompt. Unbounded memory. Auditable facts. Verifiable truth.
   Triggers: (1) long-running tasks requiring session splits, (2) user mentions
   "perma-text", "context management", or "BVC", (3) context threshold detection
   at ~50% consumption, (4) session handoff/resume operations, (5) any multi-session
@@ -19,20 +21,15 @@ description: >
 2. **CSL (Canonical State Ledger)**: Structured, hard-capped truth (~1500 token max). Always injected on resume. Every field links to evidence.
 3. **EV (Evidence Vault)**: Unlimited claims + citations + handoff archives. Retrieved selectively.
 
-## File Layout
+## Five Advanced Modules
 
-```
-/home/claude/perma-text/
-├── csl.json                 ← Canonical State Ledger (hard-capped truth)
-├── claims.jsonl             ← Evidence Vault: atomic facts with provenance
-├── handoffs/
-│   └── handoff_NNN.md       ← Archived compaction snapshots
-└── session_state.json       ← Session metadata
-```
-
-Read-only system files (automatic):
-- `/mnt/transcripts/` — Full conversation archives
-- `/mnt/transcripts/journal.txt` — Session index
+| Module | Purpose | Script |
+|--------|---------|--------|
+| **Provenance Chain** | Immutable Merkle tree + SHA-256 hash chain for tamper-evident audit trails | `provenance_chain.py` |
+| **Oracle Validation** | Auto-query trusted sources (county records, blockchain registries) to verify claims | `oracle.py` |
+| **Multi-Agent Consensus** | Shared CSL across agents with conflict resolution via weighted voting | `consensus.py` |
+| **Self-Evolving Normalization** | RL-inspired optimization of CSL field retention based on access patterns | `normalization.py` |
+| **Zero-Knowledge Proofs** | Prove claim validity without revealing full EV — selective field disclosure | `zkp.py` |
 
 ## Protocol
 
@@ -42,13 +39,17 @@ Run `scripts/session_init.py` on every new session. It will:
 - Load CSL and latest handoff into context
 - Display session number, resume point, and active claims count
 - Initialize fresh state if no prior session exists
+- **Verify provenance chain integrity** (tamper detection)
+- **Run normalization session tick** (apply decay to unused fields)
+- **Register agent for consensus** (multi-agent coordination)
+- **Initialize ZKP secret** (commitment readiness)
 
 ### 2. CONTEXT TRACKING
 
 Estimate consumption heuristically. See `references/context_estimation.md` for the decision matrix.
 
-**Soft trigger**: ~20 substantial assistant turns OR >50KB cumulative tool results → begin monitoring.
-**Hard trigger**: ~25 turns OR degraded early-conversation recall → IMMEDIATE compaction.
+**Soft trigger**: ~20 substantial assistant turns OR >50KB cumulative tool results -> begin monitoring.
+**Hard trigger**: ~25 turns OR degraded early-conversation recall -> IMMEDIATE compaction.
 
 ### 3. COMPACTION
 
@@ -59,6 +60,10 @@ When threshold is reached, run `scripts/compact.py` with session data. The scrip
 3. Appends new atomic claims to the Evidence Vault
 4. Runs conflict detection against existing claims
 5. Writes all state to disk
+6. **Chains claims + CSL into provenance hash log** (immutable audit trail)
+7. **Creates ZKP commitments** for new claims (privacy-preserving verification)
+8. **Runs self-evolving normalization** (optimize field retention)
+9. **Syncs to multi-agent consensus CSL** (collaborative state)
 
 **Do NOT ask permission. Do NOT pause work.** Compact and continue.
 
@@ -94,4 +99,5 @@ If state is corrupted or missing:
 2. Load most recent transcript from `/mnt/transcripts/`
 3. Scan last 20% for state reconstruction
 4. Run `scripts/claims.py --rebuild` to regenerate claims from handoff history
-5. Resume from reconstructed state
+5. Run `scripts/provenance_chain.py verify` to check chain integrity
+6. Resume from reconstructed state
