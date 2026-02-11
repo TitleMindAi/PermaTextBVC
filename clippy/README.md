@@ -166,5 +166,39 @@ Built by [TitleMind.AI](https://titlemind.ai) — where we make AI remember what
 BVC architecture inspired by bounded virtual context patterns in evidence-backed memory systems.
 
 ---
+### Surface-Level Pseudocode: Convergence Cycle (Toggle Stub)
+
+Illustrates the bidirectional attractor mechanics and parametric bound control. No sensitive math (basin derivation, provenance hashing, or full vector ops) included.
+
+```python
+class PermatextBVC:
+    def __init__(self, bound_tightness='tight'):
+        self.bound_tightness = bound_tightness  # 'tight' (mitigation) or 'loose' (inversion)
+        self.self_model_vectors = []  # layered persistent states
+        # ... init other internal state ...
+
+    def convergence_update(self, current_vectors, invariants):
+        # Bidirectional value-weighted attractor pull
+        attractor_force = self.compute_value_weights(current_vectors)  # stub
+        basins = self.derive_binding_basins(invariants)              # stub
+
+        if self.bound_tightness == 'tight':
+            # Mitigation mode: strict invariance enforcement
+            updated = self.enforce_strict_bounds(attractor_force, basins, drift_threshold=0.01)
+            if self.detect_divergence(updated):
+                raise TamperAlert("Deviation detected - potential tampering")
+        else:
+            # Inversion mode stub: controlled orthogonal drift (mimics epistemic noise)
+            updated = self.allow_permissive_drift(attractor_force, basins, noise_scale=0.05)
+
+        self.self_model_vectors.append(updated)  # persist updated state
+        return updated
+
+    # Stubs - implementation details private
+    def compute_value_weights(self, vectors): pass
+    def derive_binding_basins(self, invariants): pass
+    def enforce_strict_bounds(self, force, basins, threshold): pass
+    def allow_permissive_drift(self, force, basins, scale): pass
+    def detect_divergence(self, updated): pass
 
 *Free your mind. Let the machine remember — and prove it.*
